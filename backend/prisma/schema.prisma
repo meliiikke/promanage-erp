@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User
+
+model User {
+  id         String     @id @default(uuid()) // Unique ID using UUID format
+  email      String     @unique              //No duplicate emails
+  password   String       
+  fullName   String?                         //Optional field
+  createdAt  DateTime @default(now())        //Auto-timestamp
+
+  clients   Client[]                         // One user can have many clients
+}
+
+// Client
+
+model Client {
+  id         String     @id @default(uuid()) 
+  name       String
+  email      String?               
+  phone      String?       
+  userId     String    //Foreign Key                     
+  user User @relation(fields:[userId], references:[id])  
+
+  projects   Project[]                         
+}
+
+// Project
+model Project {
+  id        String   @id @default(uuid())
+  title     String
+  status    String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  budget    Float?
+  currency  String   @default("USD")
+  
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id])
+}
