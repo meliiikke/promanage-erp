@@ -1,12 +1,14 @@
 import { Router } from "express";
 import * as authController from "../controllers/authController.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
+import { validate } from "../middlewares/validateResource.js";
+import { registerUserSchema } from "../validations/userValidation.js";
 
 const router = Router();
 
 // POST /api/auth/register
 
-router.post("/register", authController.register);
+router.post("/register", validate(registerUserSchema), authController.register);
 
 router.post("/login", authController.login);
 

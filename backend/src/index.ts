@@ -1,7 +1,8 @@
 import dotenv from "dotenv";
 import express, { Request, Response, Application } from "express";
 import cors from "cors";
-import authRoutes from "./routes/authRoutes.js"
+import authRoutes from "./routes/authRoutes.js";
+import clientRoutes from "./routes/clientRoutes.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.get("/health", (req: Request, res: Response) => {
 //API Routes
 
 app.use("/api/auth", authRoutes);
+app.use("/api/clients", clientRoutes);
 
 // Start Server
 

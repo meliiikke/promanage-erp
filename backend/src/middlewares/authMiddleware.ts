@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { decode } from "node:punycode";
 
 interface AuthRequest extends Request {
   user?: any;

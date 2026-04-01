@@ -50,7 +50,7 @@ export const login = async (req: Request, res: Response) => {
       status: "success",
       message: "Login successful",
       token,
-      user: { id: user.id, email: user.email, fullName: user.fullName },
+      user: { userId: user.id, email: user.email, fullName: user.fullName },
     });
   } catch (error: any) {
     res.status(500).json({ status: "error", message: error.message });
