@@ -15,6 +15,7 @@ model User {
   fullName   String?                         //Optional field
   createdAt  DateTime @default(now())        //Auto-timestamp
 
+  projects  Project[]
   clients   Client[]                         // One user can have many clients
 }
 
@@ -33,12 +34,15 @@ model Client {
 
 // Project
 model Project {
-  id        String   @id @default(uuid())
-  title     String
-  status    String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
-  budget    Float?
-  currency  String   @default("USD")
-  
-  clientId  String
-  client    Client   @relation(fields: [clientId], references: [id])
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  status      String   @default("PENDING")
+  budget      Float?
+  clientId    String
+  userId      String
+  client      Client   @relation(fields: [clientId], references: [id])
+  user        User     @relation(fields: [userId], references: [id]) 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
