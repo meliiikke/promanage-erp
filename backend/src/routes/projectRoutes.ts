@@ -13,16 +13,12 @@ router.use(authenticateToken);
 
 router.post("/", validate(createProjectSchema), projectController.addProject);
 router.get("/", projectController.listProjects);
+router.get("/:id", projectController.getProject);
 router.patch(
   "/:id",
-  authenticateToken,
   validate(updateProjectSchema),
   projectController.editProject,
 );
 
-router.delete(
-  "/:id",
-  authenticateToken,
-  projectController.deleteProjectController,
-);
+router.delete("/:id", projectController.deleteProjectController);
 export default router;

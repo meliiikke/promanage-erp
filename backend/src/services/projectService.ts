@@ -14,18 +14,52 @@ export const createProject = async (data: any, userId: string) => {
 };
 
 export const getProjectsByUser = async (userId: string) => {
-  return await prisma.project.findMany({
+  const projects = await prisma.project.findMany({
     where: { userId },
     include: {
-      client: {
-        select: {
-          name: true,
-          email: true,
-        },
+      _count: {
+        select: { tasks: true }, // Toplam görev sayısı
       },
-      tasks: true,
+      tasks: {
+        select: { status: true }, // Sadece statüleri alalım ki hesaplama yapabilelim
+      },
+      client: { select: { name: true } }, // Müşteri adını da görelim, şık durur
     },
   });
+
+  return projects.map((project) => {
+    const totalTasks = project._count.tasks;
+    const completedTasks = project.tasks.filter(
+      (t) => t.status === "COMPLETED",
+    ).length;
+
+    const progress =
+      totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+    const { tasks, ...projectData } = project;
+    return { ...projectData, progress };
+  });
+};
+
+export const getProjectById = async (id: string, userId: string) => {
+  const project = await prisma.project.findFirst({
+    where: { id, userId },
+    include: {
+      tasks: true, 
+      client: true,
+    },
+  });
+
+  if (!project) return null;
+
+  const totalTasks = project.tasks.length;
+  const completedTasks = project.tasks.filter(
+    (t) => t.status === "COMPLETED",
+  ).length;
+  const progress =
+    totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  return { ...project, progress };
 };
 
 export const updateProject = async (id: string, userId: string, data: any) => {
