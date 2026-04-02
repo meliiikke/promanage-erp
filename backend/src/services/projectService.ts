@@ -23,6 +23,7 @@ export const getProjectsByUser = async (userId: string) => {
           email: true,
         },
       },
+      tasks: true,
     },
   });
 };
