@@ -4,6 +4,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.get("/health", (req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Start Server
 
