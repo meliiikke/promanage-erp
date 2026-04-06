@@ -6,6 +6,7 @@ import clientRoutes from "./routes/clientRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import { globalErrorHandler } from "./middlewares/errorMiddleware.js";
 
 dotenv.config();
 
@@ -32,6 +33,8 @@ app.use("/api/clients", clientRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/tasks", taskRoutes);
+
+app.use(globalErrorHandler);
 
 // Start Server
 
