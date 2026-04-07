@@ -3,6 +3,7 @@ import * as authController from "../controllers/authController.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
 import { validate } from "../middlewares/validateResource.js";
 import { registerUserSchema } from "../validations/userValidation.js";
+import { upload } from "../middlewares/multer.js";
 
 const router = Router();
 
@@ -15,15 +16,15 @@ const router = Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - fullName
  *               - email
  *               - password
  *             properties:
- *               name:
+ *               fullName:
  *                 type: string
  *                 example: Melike
  *               email:
@@ -32,11 +33,19 @@ const router = Router();
  *               password:
  *                 type: string
  *                 example: 123456
+ *               avatar:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: User created successfully
  */
-router.post("/register", validate(registerUserSchema), authController.register);
+router.post(
+  "/register",
+  upload.single("avatar"),
+  validate(registerUserSchema),
+  authController.register,
+);
 
 /**
  * @swagger

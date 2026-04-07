@@ -20,7 +20,12 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(helmet());
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
 const limiter = rateLimit({
   max: 100,
@@ -29,7 +34,7 @@ const limiter = rateLimit({
 });
 
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
     status: "success",

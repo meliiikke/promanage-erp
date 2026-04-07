@@ -8,12 +8,23 @@ import AppError from "../utils/appError.js";
 export const register = catchAsync(async (req: Request, res: Response) => {
   const { email, password, fullName } = req.body;
 
-  const newUser = await userService.createUser({ email, password, fullName });
+  const file = req.file;
+
+  const newUser = await userService.createUser({
+    email,
+    password,
+    fullName,
+    file,
+  });
 
   res.status(201).json({
     status: "success",
     message: "User created successfully",
-    data: { userId: newUser.id, email: newUser.email },
+    data: {
+      userId: newUser.id,
+      email: newUser.email,
+      avatar: newUser.avatarUrl,
+    },
   });
 });
 

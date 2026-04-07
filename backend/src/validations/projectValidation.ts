@@ -13,7 +13,7 @@ export const createProjectSchema = z.object({
       .enum(["PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"])
       .default("PENDING"),
 
-    budget: z.number().nonnegative("Budget cannot be negative").optional(),
+    budget: z.coerce.number().optional().nullable(),
 
     clientId: z
       .string()
@@ -29,6 +29,6 @@ export const updateProjectSchema = z.object({
     status: z
       .enum(["PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"])
       .optional(),
-    budget: z.number().nonnegative().optional(),
+    budget: z.coerce.number().optional().nullable(),
   }),
 });
