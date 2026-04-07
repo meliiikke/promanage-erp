@@ -1,3 +1,5 @@
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 import express, { Request, Response, Application } from "express";
 import cors from "cors";
@@ -7,6 +9,8 @@ import projectRoutes from "./routes/projectRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import { globalErrorHandler } from "./middlewares/errorMiddleware.js";
+import swaggerUi from "swagger-ui-express";
+import { specs } from "./config/swagger.js";
 
 dotenv.config();
 
@@ -14,8 +18,16 @@ const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+app.use(helmet());
 
 app.use(cors());
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 15 * 60 * 1000,
+  message: "Too many requests from this IP, please try again after 15 minutes",
+});
+
 app.use(express.json());
 
 app.get("/health", (req: Request, res: Response) => {
@@ -26,8 +38,10 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-//API Routes
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
+//API Routes
+app.use("/api", limiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/projects", projectRoutes);
